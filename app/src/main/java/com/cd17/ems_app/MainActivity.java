@@ -1,0 +1,91 @@
+package com.cd17.ems_app;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.cd17.ems_app.Fragments.AddFragment;
+import com.cd17.ems_app.Fragments.DeleteFragment;
+import com.cd17.ems_app.Fragments.DisplayFragment;
+import com.cd17.ems_app.Fragments.FilterFragment;
+import com.cd17.ems_app.Fragments.UpdateFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
+public class MainActivity extends AppCompatActivity
+{
+    //private Button logout;
+
+    private BottomNavigationView bottomNavigationView;
+    private Fragment selectorFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        /*logout = findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(MainActivity.this, "Logged Out..!!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this , StartActivity.class));
+                finish();
+            }
+        });*/
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item)
+            {
+                switch (item.getItemId())
+                {
+                    case R.id.nav_display:
+                        selectorFragment = new DisplayFragment();
+                        break;
+
+                    case R.id.nav_add:
+                        selectorFragment = new AddFragment();
+                        break;
+
+                    case R.id.nav_update:
+                        selectorFragment = new UpdateFragment();
+                        break;
+
+                    case R.id.nav_delete:
+                        selectorFragment = new DeleteFragment();
+                        break;
+
+                    case R.id.nav_filter:
+                        selectorFragment = new FilterFragment();
+                        break;
+                }
+
+                if(selectorFragment != null)
+                {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , selectorFragment).commit();
+                }
+                return true;
+            }
+        });
+        // INITALLY DISPLAY FRAGMENT SHOULD BE VISIBLE
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , new DisplayFragment()).commit();
+    }
+}
