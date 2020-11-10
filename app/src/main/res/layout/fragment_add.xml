@@ -1,14 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Fragments.AddFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="ADD FRAGMENT" />
+        android:padding="10dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Employee ID"
+                android:id="@+id/emp_id"
+                android:layout_marginTop="100dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Employee First Name"
+                android:id="@+id/emp_fname"
+                android:layout_below="@id/emp_id"
+                android:layout_marginTop="100dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Employee Last Name"
+                android:id="@+id/emp_lname"
+                android:layout_below="@id/emp_fname"
+                android:layout_marginTop="100dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"
+                android:id="@+id/emp_phone"
+                android:layout_below="@id/emp_lname"
+                android:layout_marginTop="100dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Employee First Name"
+                android:id="@+id/emp_email"
+                android:layout_below="@id/emp_phone"
+                android:layout_marginTop="100dp"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
