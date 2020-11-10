@@ -1,14 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Fragments.AddFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="ADD FRAGMENT" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Employee ID"
+        android:id="@+id/empid"
+        android:layout_marginTop="10dp"/>
+
+    <EditText
+        android:id="@+id/name_fname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/empid"
+        android:hint="First Name" />
+
+    <EditText
+          android:id="@+id/name_lname"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="25dp"
+          android:layout_below="@id/name_fname"
+          android:hint="Last Name" />
+
+    <EditText
+        android:id="@+id/emp_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/name_lname"
+        android:hint="Email" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_below="@id/emp_email"
+        android:hint="Mobile Number"
+        android:inputType="phone" />
+
+    <EditText
+          android:id="@+id/city"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="40dp"
+          android:layout_below="@id/phone"
+          android:hint="City" />
+
+     <EditText
+          android:id="@+id/date"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="45dp"
+          android:layout_below="@id/city"
+          android:hint="Date Of Joining"
+          android:inputType="date" />
+
+    <EditText
+        android:id="@+id/gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_below="@id/date"
+        android:hint="Gender" />
+
+
+    <EditText
+        android:id="@+id/age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_below="@id/gender"
+        android:hint="Age"
+        android:inputType="number" />
+
+
+    <EditText
+        android:id="@+id/qualification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="55dp"
+        android:layout_below="@id/age"
+        android:hint="Qualification"/>
+
+    <EditText
+        android:id="@+id/domain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="57dp"
+        android:layout_below="@id/qualification"
+        android:hint="Domain"/>
+
+    <EditText
+          android:id="@+id/yoe"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="59dp"
+          android:layout_below="@id/domain"
+          android:hint="Year of Experience"
+          android:inputType="number" />
+
+    <EditText
+          android:id="@+id/role"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="61dp"
+          android:layout_below="@id/yoe"
+          android:hint="Role"/>
+
+    <EditText
+          android:id="@+id/salary"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="63dp"
+          android:layout_below="@id/yoe"
+          android:hint="Salary"
+          android:inputType="number" />
+
+    <EditText
+          android:id="@+id/leaves"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="66dp"
+          android:layout_below="@id/salary"
+          android:hint="Number of remaining leaves"
+          android:inputType="number" />
+
+
+    <EditText
+          android:id="@+id/dept"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="68dp"
+          android:layout_below="@id/leaves"
+          android:hint="Department Name"/>
+
+    <EditText
+          android:id="@+id/proj"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="71dp"
+          android:layout_below="@id/dept"
+          android:hint="Project Name"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/addButton"
+        android:layout_marginTop="75dp"
+        android:layout_below="@id/proj"
+        android:layout_gravity="center|bottom"
+        android:layout_alignParentBottom="true"/>
+
+
+      </LinearLayout>
+    </ScrollView>
+</LinearLayout>
