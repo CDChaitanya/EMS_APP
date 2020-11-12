@@ -111,10 +111,10 @@ public class UpdateActivity extends AppCompatActivity
                         dept.setText(emp.getDept());
                         proj.setText(emp.getProject());
                     }
-                    else {
+                    /*else {
                         System.out.println("#######"+emp.getId());
                         Toast.makeText(UpdateActivity.this, "IN ELSE NOT FOUND", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 }
             }
             @Override
@@ -172,6 +172,8 @@ public class UpdateActivity extends AppCompatActivity
                     Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
 
+                    Intent intent = new Intent(UpdateActivity.this , MainActivity.class);
+                    startActivity(intent);
                 }
             }
         });
