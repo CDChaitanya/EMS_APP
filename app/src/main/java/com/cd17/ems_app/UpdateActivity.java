@@ -111,10 +111,10 @@ public class UpdateActivity extends AppCompatActivity
                         dept.setText(emp.getDept());
                         proj.setText(emp.getProject());
                     }
-                    else {
+                    /*else {
                         System.out.println("#######"+emp.getId());
                         Toast.makeText(UpdateActivity.this, "IN ELSE NOT FOUND", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
                 }
             }
             @Override

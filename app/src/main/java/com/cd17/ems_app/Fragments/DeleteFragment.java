@@ -1,5 +1,6 @@
 package com.cd17.ems_app.Fragments;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -53,21 +54,47 @@ public class DeleteFragment extends Fragment
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                         {
-                            Toast.makeText(getActivity(), txt_id, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), txt_id, Toast.LENGTH_SHORT).show();
                             for(DataSnapshot snap : dataSnapshot.getChildren())
                             {
                                 Employee emp = snap.getValue(Employee.class);
                                 if(Integer.parseInt(txt_id) == Integer.parseInt(emp.getId()) )
                                 {
-                                    System.out.println("DELETING THE DATA " + emp.getId());
-                                    snap.getRef().removeValue();
-                                    Toast.makeText(getActivity(), "Employee Deleted", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getActivity() , MainActivity.class);
-                                    getActivity().startActivity(intent);
+                                    AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                            .setTitle("Delete")
+                                            .setMessage("Want to delete an employee")
+                                            .setPositiveButton("Yes" , null)
+                                            .setNegativeButton("No" , null)
+                                            .show();
+
+                                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                    positiveButton.setOnClickListener(new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            snap.getRef().removeValue();
+                                            Toast.makeText(getActivity(), "Employee Deleted", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                            Intent intent = new Intent(getActivity() , MainActivity.class);
+                                            getActivity().startActivity(intent);
+                                        }
+                                    });
+                                    Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                    negativeButton.setOnClickListener(new View.OnClickListener()
+                                    {
+                                        @Override
+                                        public void onClick(View v)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+
                                 }
-                                else {
+                                /*else {
                                     Toast.makeText(getActivity(), "NOT FOUND", Toast.LENGTH_SHORT).show();
-                                }
+                                }*/
                             }
                         }
                         @Override
