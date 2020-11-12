@@ -9,6 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EMS_APP">
+
         <activity android:name=".DisplayActivity"></activity>
         <activity android:name=".UpdateActivity" />
         <activity android:name=".MainActivity" />
