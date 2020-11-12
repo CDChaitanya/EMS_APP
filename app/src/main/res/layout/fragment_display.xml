@@ -15,10 +15,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="743dp" />
+            android:layout_height="741dp"
+            android:clickable="true"
+            android:padding="20dp" />
 
 
     </LinearLayout>

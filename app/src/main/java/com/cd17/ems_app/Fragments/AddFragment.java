@@ -64,6 +64,7 @@ public class AddFragment extends Fragment
         proj = view.findViewById(R.id.proj);
         addButton = view.findViewById(R.id.addButton);
 
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,23 +92,23 @@ public class AddFragment extends Fragment
                 }else{
 
                     HashMap<String, Object>map = new HashMap<>();
-                    map.put("Employee ID",txtId);
-                    map.put("First Name",txtFname);
-                    map.put("Last Name",txtLname);
-                    map.put("Email",txtEmail);
-                    map.put("Phone",txtPhone);
-                    map.put("City",txtCity);
-                    map.put("Date of Joining",txtDoj);
-                    map.put("Gender",txtGender);
-                    map.put("Age",txtAge);
-                    map.put("Qualification",txtQuali);
-                    map.put("Domain",txtDomain);
-                    map.put("Year of Experience",txtYoe);
-                    map.put("Role",txtRole);
-                    map.put("Salary",txtSalary);
-                    map.put("Leaves",txtLeaves);
-                    map.put("Department",txtDept);
-                    map.put("Project",txtProj);
+                    map.put("id",txtId);
+                    map.put("fname",txtFname);
+                    map.put("lname",txtLname);
+                    map.put("mail",txtEmail);
+                    map.put("phone",txtPhone);
+                    map.put("city",txtCity);
+                    map.put("doj",txtDoj);
+                    map.put("gender",txtGender);
+                    map.put("age",txtAge);
+                    map.put("qualification",txtQuali);
+                    map.put("domain",txtDomain);
+                    map.put("yoe",txtYoe);
+                    map.put("role",txtRole);
+                    map.put("salary",txtSalary);
+                    map.put("leaves",txtLeaves);
+                    map.put("dept",txtDept);
+                    map.put("project",txtProj);
 
                     Toast.makeText(getActivity(),"Employee is added successfully",Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
