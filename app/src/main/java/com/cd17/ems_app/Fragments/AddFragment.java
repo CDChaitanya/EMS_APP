@@ -1,5 +1,6 @@
 package com.cd17.ems_app.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,7 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.cd17.ems_app.MainActivity;
 import com.cd17.ems_app.R;
+import com.cd17.ems_app.UpdateActivity;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
@@ -68,7 +71,7 @@ public class AddFragment extends Fragment
             @Override
             public void onClick(View view) {
 
-                String txtId = empid.getText().toString();
+                String txtId = empid.getText().toString().trim();
                 String txtFname = fname.getText().toString();
                 String txtLname = lname.getText().toString();
                 String txtEmail = empMail.getText().toString();
@@ -112,6 +115,8 @@ public class AddFragment extends Fragment
                     Toast.makeText(getActivity(),"Employee is added successfully",Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
 
+                    Intent intent = new Intent(getActivity() , MainActivity.class);
+                    getActivity().startActivity(intent);
                 }
             }
         });

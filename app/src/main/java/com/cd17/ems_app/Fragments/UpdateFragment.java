@@ -37,7 +37,7 @@ public class UpdateFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                String txt_id = empid.getText().toString();
+                String txt_id = empid.getText().toString().trim();
 
                 if(TextUtils.isEmpty(txt_id))
                     Toast.makeText(context, "ENTER ID TO UPDATE", Toast.LENGTH_SHORT).show();

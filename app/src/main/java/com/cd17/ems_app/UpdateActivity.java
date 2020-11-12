@@ -172,6 +172,8 @@ public class UpdateActivity extends AppCompatActivity
                     Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
                     FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
 
+                    Intent intent = new Intent(UpdateActivity.this , MainActivity.class);
+                    startActivity(intent);
                 }
             }
         });
