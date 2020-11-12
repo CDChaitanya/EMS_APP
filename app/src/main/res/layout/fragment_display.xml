@@ -23,7 +23,6 @@
                 android:clickable="true"
                 android:padding="20dp" />
 
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

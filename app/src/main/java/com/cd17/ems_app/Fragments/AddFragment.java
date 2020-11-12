@@ -67,6 +67,7 @@ public class AddFragment extends Fragment
         proj = view.findViewById(R.id.proj);
         addButton = view.findViewById(R.id.addButton);
 
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
