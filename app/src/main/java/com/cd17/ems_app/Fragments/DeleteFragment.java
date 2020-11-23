@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -23,6 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DeleteFragment extends Fragment
 {
@@ -48,7 +54,44 @@ public class DeleteFragment extends Fragment
                     Toast.makeText(getActivity(), "ENTER ID TO DELETE", Toast.LENGTH_SHORT).show();
                 else
                 {
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
+
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            for(DocumentSnapshot snap : value) {
+                                Employee emp = snap.toObject(Employee.class);
+                                if(Integer.parseInt(txt_id) == Integer.parseInt(emp.getId()) ) {
+                                    AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                                            .setTitle("Delete")
+                                            .setMessage("Want to delete an employee")
+                                            .setPositiveButton("Yes", null)
+                                            .setNegativeButton("No", null)
+                                            .show();
+
+                                    Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            snap.getReference().delete();
+                                            Toast.makeText(getActivity(), "Employee Deleted", Toast.LENGTH_SHORT).show();
+                                            dialog.dismiss();
+                                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                                            getActivity().startActivity(intent);
+                                        }
+                                    });
+                                    Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+                                    negativeButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                   /* DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
                     reference.addValueEventListener(new ValueEventListener()
                     {
                         @Override
@@ -92,17 +135,18 @@ public class DeleteFragment extends Fragment
 
 
                                 }
-                                /*else {
+                                else {
                                     Toast.makeText(getActivity(), "NOT FOUND", Toast.LENGTH_SHORT).show();
-                                }*/
+                                }
                             }
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
 
                         }
-                    });
+                    });*/
                 }
+
             }
         });
         return rootView;

@@ -1,6 +1,7 @@
 package com.cd17.ems_app;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,6 +15,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DisplayActivity extends AppCompatActivity {
 
@@ -58,9 +64,35 @@ public class DisplayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String s = intent.getStringExtra("key");
-       // Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
-         reference.addValueEventListener(new ValueEventListener() {
+        // Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        //  DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot dataSnapshot, @Nullable FirebaseFirestoreException error) {
+                for (DocumentSnapshot snap : dataSnapshot) {
+                    Employee emp = snap.toObject(Employee.class);
+                    if (Integer.parseInt(s) == Integer.parseInt(emp.getId())) {
+                        fname.setText(emp.getFname());
+                        lname.setText(emp.getLname());
+                        empMail.setText(emp.getMail());
+                        phone.setText(emp.getPhone());
+                        city.setText(emp.getCity());
+                        doj.setText(emp.getDoj());
+                        gender.setText(emp.getGender());
+                        age.setText(emp.getAge());
+                        quali.setText(emp.getQualification());
+                        domain.setText(emp.getDomain());
+                        yoe.setText(emp.getYoe());
+                        role.setText(emp.getRole());
+                        salary.setText(emp.getSalary());
+                        leaves.setText(emp.getLeaves());
+                        dept.setText(emp.getDept());
+                        proj.setText(emp.getProject());
+                    }
+                }
+            }
+         /*reference.addValueEventListener(new ValueEventListener() {
              @Override
              public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                  for(DataSnapshot snap : dataSnapshot.getChildren()) {
@@ -90,7 +122,8 @@ public class DisplayActivity extends AppCompatActivity {
              public void onCancelled(@NonNull DatabaseError databaseError) {
 
              }
-         });
+         });*/
 
+        });
     }
 }

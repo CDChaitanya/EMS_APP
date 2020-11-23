@@ -1,11 +1,14 @@
 package com.cd17.ems_app;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +38,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*logout = findViewById(R.id.logout);
+       /* logout = findViewById(R.id.logout);
         logout.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity
                 finish();
             }
         });*/
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -87,5 +91,54 @@ public class MainActivity extends AppCompatActivity
         });
         // INITALLY DISPLAY FRAGMENT SHOULD BE VISIBLE
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container , new DisplayFragment()).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.mymenu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        switch(id){
+
+            case R.id.profile:
+                Intent intent = new Intent(this,ProfileActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.logout:
+                AlertDialog();
+                break;
+        }
+        return true;
+    }
+    public void AlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Exit..!!");
+        builder.setIcon(R.drawable.ic_exit);
+        builder.setMessage("Are you sure you want to Exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth.getInstance().signOut();
+                        Toast.makeText(MainActivity.this, "Logged Out..!!", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, StartActivity.class));
+                        finish();
+
+                    }
+                })
+
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 }
