@@ -12,9 +12,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity
 {
@@ -22,8 +28,9 @@ public class RegisterActivity extends AppCompatActivity
     private EditText email;
     private EditText password;
     private Button register;
-
     private FirebaseAuth auth;
+    FirebaseFirestore fstore;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity
         register = findViewById(R.id.register);
 
         auth = FirebaseAuth.getInstance();
+        fstore = FirebaseFirestore.getInstance();
 
         register.setOnClickListener(new View.OnClickListener()
         {
@@ -51,29 +59,40 @@ public class RegisterActivity extends AppCompatActivity
                     Toast.makeText(RegisterActivity.this, "Empty Credentials..!", Toast.LENGTH_SHORT).show();
                 else if(txt_password.length() < 6)
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
-                else
-                    registerUser(txt_name, txt_email, txt_password);
+                else{
+                    //registerUser(txt_name, txt_email, txt_password);
+                    auth.createUserWithEmailAndPassword(txt_email , txt_password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            if(task.isSuccessful())
+                            {
+                                userId = auth.getCurrentUser().getUid();
+                                DocumentReference documentReference = fstore.collection("Admins").document(userId);
+                                Map<String,Object> admin = new HashMap<>();
+                                admin.put("name",txt_name);
+                                admin.put("email",txt_email);
+                                documentReference.set(admin).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Toast.makeText(RegisterActivity.this, "Registering User", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                startActivity(new Intent(RegisterActivity.this  , MainActivity.class));
+                                finish();
+                            }
+                            else
+                                Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         });
     }
 
-    private void registerUser(String name, String email, String password)
+   /* private void registerUser(String name, String email, String password)
     {
-        auth.createUserWithEmailAndPassword(email , password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(RegisterActivity.this, "Registering User", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(RegisterActivity.this  , MainActivity.class));
-                    finish();
-                }
-                else
-                    Toast.makeText(RegisterActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+    } */
 }
 
 

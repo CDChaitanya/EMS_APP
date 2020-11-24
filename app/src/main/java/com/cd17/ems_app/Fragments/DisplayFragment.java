@@ -1,9 +1,11 @@
 package com.cd17.ems_app.Fragments;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -17,16 +19,18 @@ import com.cd17.ems_app.Employee;
 import com.cd17.ems_app.R;
 
 import com.cd17.ems_app.DisplayActivity;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 //import static androidx.constraintlayout.motion.utils.Easing.CubicEasing.error;
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+
 
 public class DisplayFragment extends Fragment
 {
@@ -42,15 +46,42 @@ public class DisplayFragment extends Fragment
         ArrayList<String> list = new ArrayList<>();
         ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item,list);
         listView.setAdapter(adapter);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onEvent(@Nullable QuerySnapshot documentSnapshots, @Nullable FirebaseFirestoreException error) {
+                list.clear();
+                for(DocumentSnapshot snap : documentSnapshots){
+                    Employee em = snap.toObject(Employee.class);
+                    String txt = em.getId() + ": " + em.getFname() + " " + em.getLname();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
+                    list.add(txt);
+            }
+                //Collections.sort(list);
+                //list.sort(Comparator.naturalOrder());
+                //list.stream().sorted().collect(Collectors.toList());
+               // Collections.sort(list.subList(1, list.size()));
+                //list.sort(Sortbyid());
+               // list.sort(Comparator.comparingInt(Employee::getId));
+               /* ArrayList<Integer> newList = new ArrayList<Integer>(id.size());
+                for(String myInt : list){
+                    newList.add(Integer.valueOf(myInt));
+                }
+                Collections.sort(newList);*/
+               // Collections.sort(list,Collections.reverseOrder());
+                adapter.notifyDataSetChanged();
+        }});
+
+
+       /* DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
                 for(DataSnapshot snap : dataSnapshot.getChildren()){
                     Employee em = snap.getValue(Employee.class);
-                    String txt = em.getId() + " : " + em.getFname() + " " + em.getLname();
+                    String txt = em.getId() + ": " + em.getFname() + " " + em.getLname();
                     list.add(txt);
                    // Log.e(TAG, "User name: " + em.getFname() + ", email " + em.getMail());
                 }
@@ -63,17 +94,20 @@ public class DisplayFragment extends Fragment
                // Log.e(TAG, "Failed to read value.", databaseError.toException());
 
             }
-        });
+        });*/
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                position=position+1;
-                String txt_id = String.valueOf(position);
+                String[] strings = list.get(position).split(":");
+                System.out.println(strings[0]+"####");
+                String txt_id = String.valueOf(strings[0]);
                 Intent intent = new Intent(getActivity(), DisplayActivity.class);
                 intent.putExtra("key" , txt_id);
                 getActivity().startActivity(intent);
             }
         });
+
+
         return view;
     }
 }
