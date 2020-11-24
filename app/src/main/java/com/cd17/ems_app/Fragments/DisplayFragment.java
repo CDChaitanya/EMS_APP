@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 //import static androidx.constraintlayout.motion.utils.Easing.CubicEasing.error;
@@ -54,6 +55,7 @@ public class DisplayFragment extends Fragment
                 for(DocumentSnapshot snap : documentSnapshots){
                     Employee em = snap.toObject(Employee.class);
                     String txt = em.getId() + ": " + em.getFname() + " " + em.getLname();
+
                     list.add(txt);
             }
                 //Collections.sort(list);
@@ -62,6 +64,12 @@ public class DisplayFragment extends Fragment
                // Collections.sort(list.subList(1, list.size()));
                 //list.sort(Sortbyid());
                // list.sort(Comparator.comparingInt(Employee::getId));
+               /* ArrayList<Integer> newList = new ArrayList<Integer>(id.size());
+                for(String myInt : list){
+                    newList.add(Integer.valueOf(myInt));
+                }
+                Collections.sort(newList);*/
+               // Collections.sort(list,Collections.reverseOrder());
                 adapter.notifyDataSetChanged();
         }});
 
