@@ -1,6 +1,7 @@
 package com.cd17.ems_app;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,17 +10,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-public class DisplayActivity extends AppCompatActivity {
+public class DisplayActivity extends AppCompatActivity
+{
 
-    private TextView fname;
-    private TextView lname;
-    private TextView empMail;
+    private TextView name_fname;
+    private TextView name_lname;
+    private TextView emp_email;
     private TextView phone;
     private TextView city;
     private TextView doj;
@@ -35,13 +46,14 @@ public class DisplayActivity extends AppCompatActivity {
     private TextView proj;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display);
 
-        fname = findViewById(R.id.name_fname);
-        lname = findViewById(R.id.name_lname);
-        empMail = findViewById(R.id.emp_email);
+        name_fname = findViewById(R.id.name_fname);
+        name_lname = findViewById(R.id.name_lname);
+        emp_email = findViewById(R.id.emp_email);
         phone = findViewById(R.id.phone);
         city = findViewById(R.id.city);
         doj = findViewById(R.id.date);
@@ -58,39 +70,38 @@ public class DisplayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String s = intent.getStringExtra("key");
-       // Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
-         reference.addValueEventListener(new ValueEventListener() {
-             @Override
-             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 for(DataSnapshot snap : dataSnapshot.getChildren()) {
-                     Employee emp = snap.getValue(Employee.class);
-                     if(Integer.parseInt(s) == Integer.parseInt(emp.getId()) ) {
-                         fname.setText(emp.getFname());
-                         lname.setText(emp.getLname());
-                         empMail.setText(emp.getMail());
-                         phone.setText(emp.getPhone());
-                         city.setText(emp.getCity());
-                         doj.setText(emp.getDoj());
-                         gender.setText(emp.getGender());
-                         age.setText(emp.getAge());
-                         quali.setText(emp.getQualification());
-                         domain.setText(emp.getDomain());
-                         yoe.setText(emp.getYoe());
-                         role.setText(emp.getRole());
-                         salary.setText(emp.getSalary());
-                         leaves.setText(emp.getLeaves());
-                         dept.setText(emp.getDept());
-                         proj.setText(emp.getProject());
-                     }
-                 }
-             }
 
-             @Override
-             public void onCancelled(@NonNull DatabaseError databaseError) {
-
-             }
-         });
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>()
+        {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error)
+            {
+                for(DocumentSnapshot snap : value)
+                {
+                    System.out.println(snap.getString("id")+" " +s.equals(snap.getString("id")) + s + "   ############");
+                    if( s.equalsIgnoreCase(snap.getString("id")) )
+                    {
+                        name_fname.setText(snap.getString("fname"));
+                        name_lname.setText(snap.getString("lname"));
+                        emp_email.setText(snap.getString("mail"));
+                        phone.setText(snap.getString("phone"));
+                        city.setText(snap.getString("city"));
+                        doj.setText(snap.getString("doj"));
+                        gender.setText(snap.getString("gender"));
+                        age.setText(snap.getString("age"));
+                        quali.setText(snap.getString("qualification"));
+                        domain.setText(snap.getString("domain"));
+                        yoe.setText(snap.getString("yoe"));
+                        role.setText(snap.getString("role"));
+                        salary.setText(snap.getString("salary"));
+                        leaves.setText(snap.getString("leaves"));
+                        dept.setText(snap.getString("dept"));
+                        proj.setText(snap.getString("project"));
+                    }
+                }
+            }
+        });
 
     }
 }

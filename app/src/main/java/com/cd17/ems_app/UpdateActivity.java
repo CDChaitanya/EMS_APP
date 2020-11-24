@@ -1,6 +1,7 @@
 package com.cd17.ems_app;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,11 +15,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.cd17.ems_app.Fragments.UpdateFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 
@@ -52,12 +61,6 @@ public class UpdateActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
 
-        /*FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction t = manager.beginTransaction();
-        UpdateFragment m = new UpdateFragment();
-        t.add(R.id.relativeLayoutUpdate , m);
-        t.commit();*/
-
         empid = findViewById(R.id.empid);
         fname = findViewById(R.id.name_fname);
         lname = findViewById(R.id.name_lname);
@@ -80,46 +83,37 @@ public class UpdateActivity extends AppCompatActivity
         Intent intent = getIntent();
         String s = intent.getStringExtra("key");
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
 
-        reference.addValueEventListener(new ValueEventListener()
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>()
         {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error)
             {
-                for(DataSnapshot snap : dataSnapshot.getChildren())
+                for(DocumentSnapshot snap : value)
                 {
-                    Employee emp = snap.getValue(Employee.class);
-                    if(Integer.parseInt(s) == Integer.parseInt(emp.getId()) )
+                    System.out.println(snap.getString("id")+" " +s.equals(snap.getString("id")) + s + "   ############");
+                    if( s.equalsIgnoreCase(snap.getString("id")) )
                     {
-                        Toast.makeText(UpdateActivity.this, "EMPLOYEE FOUND", Toast.LENGTH_SHORT).show();
-                        empid.setText(emp.getId());
-                        fname.setText(emp.getFname());
-                        lname.setText(emp.getLname());
-                        empMail.setText(emp.getMail());
-                        phone.setText(emp.getPhone());
-                        city.setText(emp.getCity());
-                        doj.setText(emp.getDoj());
-                        gender.setText(emp.getGender());
-                        age.setText(emp.getAge());
-                        quali.setText(emp.getQualification());
-                        domain.setText(emp.getDomain());
-                        yoe.setText(emp.getYoe());
-                        role.setText(emp.getRole());
-                        salary.setText(emp.getSalary());
-                        leaves.setText(emp.getLeaves());
-                        dept.setText(emp.getDept());
-                        proj.setText(emp.getProject());
+                        empid.setText(snap.getString("id"));
+                        fname.setText(snap.getString("fname"));
+                        lname.setText(snap.getString("lname"));
+                        empMail.setText(snap.getString("mail"));
+                        phone.setText(snap.getString("phone"));
+                        city.setText(snap.getString("city"));
+                        doj.setText(snap.getString("doj"));
+                        gender.setText(snap.getString("gender"));
+                        age.setText(snap.getString("age"));
+                        quali.setText(snap.getString("qualification"));
+                        domain.setText(snap.getString("domain"));
+                        yoe.setText(snap.getString("yoe"));
+                        role.setText(snap.getString("role"));
+                        salary.setText(snap.getString("salary"));
+                        leaves.setText(snap.getString("leaves"));
+                        dept.setText(snap.getString("dept"));
+                        proj.setText(snap.getString("project"));
                     }
-                    /*else {
-                        System.out.println("#######"+emp.getId());
-                        Toast.makeText(UpdateActivity.this, "IN ELSE NOT FOUND", Toast.LENGTH_SHORT).show();
-                    }*/
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -150,27 +144,45 @@ public class UpdateActivity extends AppCompatActivity
                     Toast.makeText(UpdateActivity.this, "Fill All Credentials", Toast.LENGTH_SHORT).show();
                 }else{
 
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("id",txtId);
-                    map.put("fname",txtFname);
-                    map.put("lname",txtLname);
-                    map.put("mail",txtEmail);
-                    map.put("phone",txtPhone);
-                    map.put("city",txtCity);
-                    map.put("doj",txtDoj);
-                    map.put("gender",txtGender);
-                    map.put("age",txtAge);
-                    map.put("qualification",txtQuali);
-                    map.put("domain",txtDomain);
-                    map.put("yoe",txtYoe);
-                    map.put("role",txtRole);
-                    map.put("salary",txtSalary);
-                    map.put("leaves",txtLeaves);
-                    map.put("dept",txtDept);
-                    map.put("project",txtProj);
+                    DocumentReference ref = FirebaseFirestore.getInstance().collection("Employees").document("Emp"+s);
+                    // HERE WE'RE NOT UPDATNG ID ALSO WE HAVE DISABLED EDING IN XML
+                    ref.update("fname",txtFname);
+                    ref.update("lname",txtLname);
+                    ref.update("mail",txtEmail);
+                    ref.update("phone",txtPhone);
+                    ref.update("city",txtCity);
+                    ref.update("doj",txtDoj);
+                    ref.update("gender",txtGender);
+                    ref.update("age",txtAge);
+                    ref.update("qualification",txtQuali);
+                    ref.update("domain",txtDomain);
+                    ref.update("yoe",txtYoe);
+                    ref.update("role",txtRole);
+                    ref.update("salary",txtSalary);
+                    ref.update("leaves",txtLeaves);
+                    ref.update("dept",txtDept);
+                    ref.update("project",txtProj).addOnCompleteListener(new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task)
+                        {
+                            Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                    Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
+                    /*HashMap<String, Object> map = new HashMap<>();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Employees").document("Emp" + txtId).set(map).addOnCompleteListener(new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task)
+                        {
+                            Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
+                        }
+                    });*/
+
+                    //Toast.makeText(UpdateActivity.this, "Employee Info Updated", Toast.LENGTH_SHORT).show();
+                    //FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
 
                     Intent intent = new Intent(UpdateActivity.this , MainActivity.class);
                     startActivity(intent);

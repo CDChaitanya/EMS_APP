@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -23,6 +24,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class DeleteFragment extends Fragment
 {
@@ -48,17 +54,15 @@ public class DeleteFragment extends Fragment
                     Toast.makeText(getActivity(), "ENTER ID TO DELETE", Toast.LENGTH_SHORT).show();
                 else
                 {
-                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
-                    reference.addValueEventListener(new ValueEventListener()
+                    FirebaseFirestore db =FirebaseFirestore.getInstance();
+                    db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>()
                     {
                         @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error)
                         {
-                            //Toast.makeText(getActivity(), txt_id, Toast.LENGTH_SHORT).show();
-                            for(DataSnapshot snap : dataSnapshot.getChildren())
+                            for(DocumentSnapshot snap : value)
                             {
-                                Employee emp = snap.getValue(Employee.class);
-                                if(Integer.parseInt(txt_id) == Integer.parseInt(emp.getId()) )
+                                if(txt_id.equals( snap.getString("id") ))
                                 {
                                     AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                             .setTitle("Delete")
@@ -73,7 +77,7 @@ public class DeleteFragment extends Fragment
                                         @Override
                                         public void onClick(View v)
                                         {
-                                            snap.getRef().removeValue();
+                                            snap.getReference().delete();
                                             Toast.makeText(getActivity(), "Employee Deleted", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                             Intent intent = new Intent(getActivity() , MainActivity.class);
@@ -89,17 +93,8 @@ public class DeleteFragment extends Fragment
                                             dialog.dismiss();
                                         }
                                     });
-
-
                                 }
-                                /*else {
-                                    Toast.makeText(getActivity(), "NOT FOUND", Toast.LENGTH_SHORT).show();
-                                }*/
                             }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
                         }
                     });
                 }

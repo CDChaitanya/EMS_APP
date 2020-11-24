@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -22,6 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -43,37 +49,35 @@ public class DisplayFragment extends Fragment
         ArrayAdapter adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item,list);
         listView.setAdapter(adapter);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
-        reference.addValueEventListener(new ValueEventListener() {
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>()
+        {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error)
+            {
                 list.clear();
-                for(DataSnapshot snap : dataSnapshot.getChildren()){
-                    Employee em = snap.getValue(Employee.class);
-                    String txt = em.getId() + " : " + em.getFname() + " " + em.getLname();
+                for(DocumentSnapshot snap : value)
+                {
+                    String txt = snap.getString("id") + ": " + snap.getString("fname") + " " + snap.getString("lname");
                     list.add(txt);
-                   // Log.e(TAG, "User name: " + em.getFname() + ", email " + em.getMail());
                 }
-
                 adapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-               // Log.e(TAG, "Failed to read value.", databaseError.toException());
-
-            }
         });
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                position=position+1;
-                String txt_id = String.valueOf(position);
+                //position=position+1;
+                String[] strings = list.get(position).split(":");
+                System.out.println(strings[0]+"########");
+                String txt_id = String.valueOf(strings[0]);
                 Intent intent = new Intent(getActivity(), DisplayActivity.class);
                 intent.putExtra("key" , txt_id);
                 getActivity().startActivity(intent);
             }
         });
+
         return view;
     }
 }

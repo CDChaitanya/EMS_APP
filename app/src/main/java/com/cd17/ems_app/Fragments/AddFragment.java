@@ -3,6 +3,7 @@ package com.cd17.ems_app.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
@@ -16,7 +17,10 @@ import android.widget.Toast;
 import com.cd17.ems_app.MainActivity;
 import com.cd17.ems_app.R;
 import com.cd17.ems_app.UpdateActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
@@ -90,9 +94,11 @@ public class AddFragment extends Fragment
                 String txtDept = dept.getText().toString();
                 String txtProj = proj.getText().toString();
 
-                if(TextUtils.isEmpty(txtId) || TextUtils.isEmpty(txtFname) || TextUtils.isEmpty(txtLname) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPhone) || TextUtils.isEmpty(txtCity) || TextUtils.isEmpty(txtDoj) || TextUtils.isEmpty(txtGender) || TextUtils.isEmpty(txtAge) || TextUtils.isEmpty(txtQuali) || TextUtils.isEmpty(txtDomain) || TextUtils.isEmpty(txtYoe) || TextUtils.isEmpty(txtRole) || TextUtils.isEmpty(txtSalary) || TextUtils.isEmpty(txtLeaves) || TextUtils.isEmpty(txtDept) || TextUtils.isEmpty(txtProj)){
+                if(TextUtils.isEmpty(txtId) || TextUtils.isEmpty(txtFname) || TextUtils.isEmpty(txtLname) || TextUtils.isEmpty(txtEmail) || TextUtils.isEmpty(txtPhone) || TextUtils.isEmpty(txtCity) || TextUtils.isEmpty(txtDoj) || TextUtils.isEmpty(txtGender) || TextUtils.isEmpty(txtAge) || TextUtils.isEmpty(txtQuali) || TextUtils.isEmpty(txtDomain) || TextUtils.isEmpty(txtYoe) || TextUtils.isEmpty(txtRole) || TextUtils.isEmpty(txtSalary) || TextUtils.isEmpty(txtLeaves) || TextUtils.isEmpty(txtDept) || TextUtils.isEmpty(txtProj))
+                {
                     Toast.makeText(getActivity(),"Empty Credentials!",Toast.LENGTH_SHORT).show();
-                }else{
+                }
+                else {
 
                     HashMap<String, Object>map = new HashMap<>();
                     map.put("id",txtId);
@@ -113,8 +119,18 @@ public class AddFragment extends Fragment
                     map.put("dept",txtDept);
                     map.put("project",txtProj);
 
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("Employees").document("Emp" + txtId).set(map).addOnCompleteListener(new OnCompleteListener<Void>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task)
+                        {
+                            Toast.makeText(getActivity(), "Employee is added successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     Toast.makeText(getActivity(),"Employee is added successfully",Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
+                    //FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
 
                     Intent intent = new Intent(getActivity() , MainActivity.class);
                     getActivity().startActivity(intent);
