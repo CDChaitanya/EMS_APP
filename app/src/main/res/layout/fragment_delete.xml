@@ -18,6 +18,7 @@
         android:layout_below ="@id/empid"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_alignParentRight="true"
         android:id="@+id/delete_btn"/>
 
 </RelativeLayout>
