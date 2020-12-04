@@ -146,6 +146,7 @@ public class UpdateActivity extends AppCompatActivity
 
                     DocumentReference ref = FirebaseFirestore.getInstance().collection("Employees").document("Emp"+s);
                     // HERE WE'RE NOT UPDATNG ID ALSO WE HAVE DISABLED EDING IN XML
+                    ref.update("id",txtId);
                     ref.update("fname",txtFname);
                     ref.update("lname",txtLname);
                     ref.update("mail",txtEmail);

@@ -22,7 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class DisplayActivity extends AppCompatActivity
@@ -102,6 +101,69 @@ public class DisplayActivity extends AppCompatActivity
                 }
             }
         });
+        // Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        //  DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Employees");
 
+
+
+        //FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("Employees").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot dataSnapshot, @Nullable FirebaseFirestoreException error) {
+                for (DocumentSnapshot snap : dataSnapshot) {
+                    Employee emp = snap.toObject(Employee.class);
+                    if (Integer.parseInt(s) == Integer.parseInt(emp.getId())) {
+                        name_fname.setText(emp.getFname());
+                        name_lname.setText(emp.getLname());
+                        emp_email.setText(emp.getMail());
+                        phone.setText(emp.getPhone());
+                        city.setText(emp.getCity());
+                        doj.setText(emp.getDoj());
+                        gender.setText(emp.getGender());
+                        age.setText(emp.getAge());
+                        quali.setText(emp.getQualification());
+                        domain.setText(emp.getDomain());
+                        yoe.setText(emp.getYoe());
+                        role.setText(emp.getRole());
+                        salary.setText(emp.getSalary());
+                        leaves.setText(emp.getLeaves());
+                        dept.setText(emp.getDept());
+                        proj.setText(emp.getProject());
+                    }
+                }
+            }
+         /*reference.addValueEventListener(new ValueEventListener() {
+             @Override
+             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                 for(DataSnapshot snap : dataSnapshot.getChildren()) {
+                     Employee emp = snap.getValue(Employee.class);
+                     if(Integer.parseInt(s) == Integer.parseInt(emp.getId()) ) {
+                         fname.setText(emp.getFname());
+                         lname.setText(emp.getLname());
+                         empMail.setText(emp.getMail());
+                         phone.setText(emp.getPhone());
+                         city.setText(emp.getCity());
+                         doj.setText(emp.getDoj());
+                         gender.setText(emp.getGender());
+                         age.setText(emp.getAge());
+                         quali.setText(emp.getQualification());
+                         domain.setText(emp.getDomain());
+                         yoe.setText(emp.getYoe());
+                         role.setText(emp.getRole());
+                         salary.setText(emp.getSalary());
+                         leaves.setText(emp.getLeaves());
+                         dept.setText(emp.getDept());
+                         proj.setText(emp.getProject());
+                     }
+                 }
+             }
+
+             @Override
+             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+             }
+         });*/
+
+        });
     }
 }

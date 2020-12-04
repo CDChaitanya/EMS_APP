@@ -16,13 +16,12 @@ import android.widget.Toast;
 
 import com.cd17.ems_app.MainActivity;
 import com.cd17.ems_app.R;
-import com.cd17.ems_app.UpdateActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class AddFragment extends Fragment
 {
@@ -100,7 +99,9 @@ public class AddFragment extends Fragment
                 }
                 else {
 
-                    HashMap<String, Object>map = new HashMap<>();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                    Map<String, Object> map = new HashMap<>();
                     map.put("id",txtId);
                     map.put("fname",txtFname);
                     map.put("lname",txtLname);
@@ -119,19 +120,15 @@ public class AddFragment extends Fragment
                     map.put("dept",txtDept);
                     map.put("project",txtProj);
 
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("Employees").document("Emp" + txtId).set(map).addOnCompleteListener(new OnCompleteListener<Void>()
-                    {
+                    //  FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
+                    db.collection("Employees").document("Emp" + txtId).set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task)
-                        {
-                            Toast.makeText(getActivity(), "Employee is added successfully", Toast.LENGTH_SHORT).show();
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful()){
+                                Toast.makeText(getActivity(),"Employee is added successfully",Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
-
-                    Toast.makeText(getActivity(),"Employee is added successfully",Toast.LENGTH_SHORT).show();
-                    //FirebaseDatabase.getInstance().getReference().child("Employees").child("Emp" + txtId).updateChildren(map);
-
                     Intent intent = new Intent(getActivity() , MainActivity.class);
                     getActivity().startActivity(intent);
                 }
