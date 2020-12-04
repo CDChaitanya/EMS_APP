@@ -93,7 +93,7 @@ public class UpdateActivity extends AppCompatActivity
                 for(DocumentSnapshot snap : value)
                 {
                     System.out.println(snap.getString("id")+" " +s.equals(snap.getString("id")) + s + "   ############");
-                    if( s.equals(snap.getString("id")) )
+                    if( s.equalsIgnoreCase(snap.getString("id")) )
                     {
                         empid.setText(snap.getString("id"));
                         fname.setText(snap.getString("fname"));
@@ -145,6 +145,7 @@ public class UpdateActivity extends AppCompatActivity
                 }else{
 
                     DocumentReference ref = FirebaseFirestore.getInstance().collection("Employees").document("Emp"+s);
+                    // HERE WE'RE NOT UPDATNG ID ALSO WE HAVE DISABLED EDING IN XML
                     ref.update("id",txtId);
                     ref.update("fname",txtFname);
                     ref.update("lname",txtLname);

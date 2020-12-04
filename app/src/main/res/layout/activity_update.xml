@@ -23,7 +23,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Employee ID"
                 android:id="@+id/empid"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:enabled="false"/>
 
             <EditText
                 android:id="@+id/name_fname"
