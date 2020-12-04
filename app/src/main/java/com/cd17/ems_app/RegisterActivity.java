@@ -24,7 +24,9 @@ import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity
 {
-    private EditText name;
+    private EditText fname;
+    private EditText lname;
+    private EditText phone;
     private EditText email;
     private EditText password;
     private Button register;
@@ -38,8 +40,10 @@ public class RegisterActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        name = findViewById(R.id.name);
+        fname = findViewById(R.id.fname);
+        lname = findViewById(R.id.lname);
         email = findViewById(R.id.email);
+        phone = findViewById(R.id.phone);
         password = findViewById(R.id.password);
         register = findViewById(R.id.register);
 
@@ -51,11 +55,13 @@ public class RegisterActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                String txt_name = name.getText().toString();
+                String txt_fname = fname.getText().toString();
+                String txt_lname = lname.getText().toString();
                 String txt_email = email.getText().toString();
+                String txt_phone = phone.getText().toString();
                 String txt_password = password.getText().toString();
 
-                if(TextUtils.isEmpty(txt_name) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password))
+                if(TextUtils.isEmpty(txt_fname) || TextUtils.isEmpty(txt_lname) || TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_phone) || TextUtils.isEmpty(txt_password))
                     Toast.makeText(RegisterActivity.this, "Empty Credentials..!", Toast.LENGTH_SHORT).show();
                 else if(txt_password.length() < 6)
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
@@ -70,8 +76,10 @@ public class RegisterActivity extends AppCompatActivity
                                 userId = auth.getCurrentUser().getUid();
                                 DocumentReference documentReference = fstore.collection("Admins").document(userId);
                                 Map<String,Object> admin = new HashMap<>();
-                                admin.put("name",txt_name);
+                                admin.put("fname",txt_fname);
+                                admin.put("lname",txt_lname);
                                 admin.put("email",txt_email);
+                                admin.put("phone",txt_phone);
                                 documentReference.set(admin).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {

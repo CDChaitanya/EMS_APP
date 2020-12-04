@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity
 
     private BottomNavigationView bottomNavigationView;
     private Fragment selectorFragment;
+    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    String txt_email = currentUser.getEmail();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -104,8 +107,9 @@ public class MainActivity extends AppCompatActivity
         switch(id){
 
             case R.id.profile:
-                Intent intent = new Intent(this,ProfileActivity.class);
-                startActivity(intent);
+                        Intent intent = new Intent(MainActivity.this , ProfileActivity.class);
+                        intent.putExtra("email" , currentUser.getEmail());
+                        startActivity(intent);
                 break;
 
             case R.id.logout:
